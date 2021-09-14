@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Product = require("../models/product");
 const multer = require("multer");
+const apierror = require("../error/api-error");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -31,7 +32,7 @@ const upload = multer({
 router.get("/", (req, res, next) => {
   const id = req.params._id;
   Product.find()
-    .select('name price _id productImage')
+    .select("name price _id productImage")
     .exec()
     .then((results) => {
       console.log(results);
@@ -60,7 +61,6 @@ router.post("/", upload.single("productImage"), (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
-    productImage: req.file.path
   });
   product
     .save()
